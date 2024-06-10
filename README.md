@@ -1,5 +1,5 @@
-npm install
-npx json-server --watch db.json --port 5000 (databasen)
+npm install //// 
+npx json-server --watch db.json --port 5000 (databasen) ////
 npm run dev
 
 # React + Vite
