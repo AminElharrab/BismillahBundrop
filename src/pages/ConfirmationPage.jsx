@@ -8,13 +8,15 @@ const ConfirmationPage = () => {
   useEffect(() => {
     const fetchReceipt = async () => {
       try {
+        console.log("Fetching receipt with ID:", receiptid); // Log receiptId being fetched
         const response = await fetch(
-          `http://localhost:5000/receipts/${receiptid}`
+          `http://localhost:5000/receipts/${parseInt(receiptid, 10)}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch receipt");
         }
         const data = await response.json();
+        console.log("Fetched receipt data:", data); // Log the fetched data
         setReceipt(data);
       } catch (error) {
         console.error("Error fetching receipt:", error);
@@ -28,6 +30,11 @@ const ConfirmationPage = () => {
     return <div>Loading...</div>;
   }
 
+  const totalAmount = receipt.orderDetails.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
   return (
     <div className="confirmation">
       <h2>Thank you for your order!</h2>
@@ -39,7 +46,7 @@ const ConfirmationPage = () => {
           </li>
         ))}
       </ul>
-      <h3>Total Amount: ${receipt.totalAmount.toFixed(2)}</h3>
+      <h3>Total Amount: ${totalAmount.toFixed(2)}</h3>
     </div>
   );
 };

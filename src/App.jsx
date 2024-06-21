@@ -27,20 +27,20 @@ const App = () => {
     }
   };
 
-  const updateQuantity = (item, quantity) => {
+  const updateQuantity = (id, quantity) => {
     if (quantity <= 0) {
-      setCart(cart.filter((cartItem) => cartItem.id !== item.id));
+      setCart(cart.filter((cartItem) => cartItem.id !== id));
     } else {
       setCart(
         cart.map((cartItem) =>
-          cartItem.id === item.id ? { ...cartItem, quantity } : cartItem
+          cartItem.id === id ? { ...cartItem, quantity } : cartItem
         )
       );
     }
   };
 
-  const removeFromCart = (item) => {
-    setCart(cart.filter((cartItem) => cartItem.id !== item.id));
+  const removeFromCart = (id) => {
+    setCart(cart.filter((cartItem) => cartItem.id !== id));
   };
 
   const placeOrder = (formData) => {
@@ -54,15 +54,16 @@ const App = () => {
       (total, item) => total + item.price * item.quantity,
       0
     );
-    setOrderDetails(orderData);
-    const receiptId = Math.floor(Math.random() * 1000000);
+    const receiptId = Math.floor(Math.random() * 1000000).toString(); // Convert receiptId to string
     const receipt = {
-      id: receiptId,
+      id: receiptId, // Save receiptId as a string
       orderDetails: orderData,
       totalAmount,
+      ...formData,
     };
 
-    fetch(`http://localhost:5000/receipt`, {
+    // Save receipt to json-server
+    fetch("http://localhost:5000/receipts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,8 +77,9 @@ const App = () => {
       .catch((error) => {
         console.error("Error saving receipt:", error);
       });
+
     setCart([]);
-    return receiptid;
+    return receiptId;
   };
 
   return (
